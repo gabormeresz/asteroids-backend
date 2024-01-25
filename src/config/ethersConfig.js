@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { contractAddress, contractABI } from "../../constants.js";
+import { contractAddress, contractABI } from "../constants/constants.js";
 
 // Initialize a provider
 const provider = new ethers.JsonRpcProvider(
