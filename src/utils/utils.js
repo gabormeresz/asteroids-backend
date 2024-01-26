@@ -21,24 +21,22 @@ export const fetchMetadata = async (tokenURI) => {
   return JSON.parse(cleanedResponse);
 };
 
-export const triggerRevalidation = async (
-  tokenId,
-  revalidateNft,
-  revalidateCollection
-) => {
+export const triggerRevalidation = async (revalType, tokenId = 0) => {
+  if (!(revalType === "collection" || revalType === "nft")) {
+    throw new Error("Wrong revalidation type");
+  }
   const revalidateResponse = await fetch(
-    `${process.env.WEB_APP_URL}/api/revalidate`,
+    `${process.env.WEB_APP_URL}/api/revalidate-${
+      revalType === "collection"
+        ? "collection"
+        : `nft?tokenId=${tokenId.toString()}`
+    }`,
     {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.API_BEARER_TOKEN}`,
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        tokenId,
-        revalidateNft,
-        revalidateCollection
-      })
+      }
     }
   );
 

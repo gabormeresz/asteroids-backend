@@ -23,7 +23,7 @@ export const updateNFTOwner = async (nft, newOwner) => {
 
 export const triggerIndividualNFTRevalidation = async (tokenId) => {
   try {
-    await triggerRevalidation(tokenId, true, false);
+    await triggerRevalidation("nft", tokenId);
   } catch (error) {
     console.error(
       `Error triggering revalidation for tokenId ${tokenId}:`,
@@ -34,7 +34,7 @@ export const triggerIndividualNFTRevalidation = async (tokenId) => {
 
 export const triggerCollectionRevalidation = async () => {
   try {
-    await triggerRevalidation(null, false, true);
+    await triggerRevalidation("collection");
   } catch (error) {
     console.error("Error triggering collection revalidation:", error);
   }
