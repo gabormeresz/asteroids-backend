@@ -22,5 +22,5 @@ app.listen(PORT, () => {
 });
 
 connectToMongoDB().then(() => {
-  // performAppInitialization();
+  performAppInitialization();
 });
