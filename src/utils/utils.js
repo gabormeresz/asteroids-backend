@@ -21,26 +21,31 @@ export const fetchMetadata = async (tokenURI) => {
   return JSON.parse(cleanedResponse);
 };
 
-export const triggerRevalidation = async (revalType, tokenId = 0) => {
-  if (!(revalType === "collection" || revalType === "nft")) {
-    throw new Error("Wrong revalidation type");
+const buildRevalidationUrl = (revalType, tokenId) => {
+  const REVALIDATION_ENDPOINT = process.env.WEB_APP_URL + "/api/revalidate-";
+  if (revalType === "collection") {
+    return REVALIDATION_ENDPOINT + "collection";
+  } else if (revalType === "nft" && tokenId) {
+    return `${REVALIDATION_ENDPOINT}nft?tokenId=${tokenId.toString()}`;
   }
-  const revalidateResponse = await fetch(
-    `${process.env.WEB_APP_URL}/api/revalidate-${
-      revalType === "collection"
-        ? "collection"
-        : `nft?tokenId=${tokenId.toString()}`
-    }`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.API_BEARER_TOKEN}`,
-        "Content-Type": "application/json"
-      }
+  throw new Error("Invalid revalidation type or missing tokenId");
+};
+
+export const triggerRevalidation = async (revalType, tokenId = 0) => {
+  const url = buildRevalidationUrl(revalType, tokenId);
+  console.log(url);
+
+  const revalidateResponse = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.API_BEARER_TOKEN}`,
+      "Content-Type": "application/json"
     }
-  );
+  });
 
   if (!revalidateResponse.ok) {
-    throw new Error("Revalidation failed");
+    throw new Error(
+      `Revalidation failed for ${revalType}, tokenId: ${tokenId}`
+    );
   }
 };
