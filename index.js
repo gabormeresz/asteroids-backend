@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import morgan from "morgan";
 import collectionRoutes from "./src/routes/collectionRoutes.js";
 import nftRoutes from "./src/routes/nftRoutes.js";
 import { connectToMongoDB } from "./src/config/mongooseConfig.js";
@@ -9,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
+
+app.use(morgan("tiny"));
 
 app.use("/nft", nftRoutes);
 app.use("/collection", collectionRoutes);
